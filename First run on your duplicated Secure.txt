@@ -1,0 +1,53 @@
+First run on your duplicated SecureOps server
+1. Upload the ZIP to Ubuntu and run:
+unzip networkcgi-saas-v1.0.zip
+cd networkcgi-saas
+
+chmod +x scripts/install.sh
+
+./scripts/install.sh
+
+When installation finishes, open:
+http://YOUR-SERVER-IP:8082
+
+I intentionally used 8082 instead of port 80 so we don't immediately interfere with whatever SecureOps configuration still exists on the cloned server.
+Use the initial demo account:
+Email:
+admin@networkcgi.com
+
+Password:
+ChangeMe123!
+
+Then configure OpenAI:
+sudo nano /opt/networkcgi/backend/.env
+
+Add:
+OPENAI_API_KEY=your_openai_api_key
+
+The model is already configured as:
+OPENAI_MODEL=gpt-6-astra
+
+Then restart:
+sudo systemctl restart networkcgi-api
+
+Check the backend:
+sudo systemctl status networkcgi-api
+
+and:
+curl http://127.0.0.1:8002/api/health
+
+You should get something similar to:
+{
+  "status": "ok",
+  "app": "NetworkCGI SaaS",
+  "environment": "production"
+}
+
+The backend was functionally tested for login, dashboard, assessment creation, findings, risks, billing-plan API, PDF generation, API documentation, and AI fallback behavior. The only part I could not compile inside my isolated environment was the React frontend because that environment could not reach npmjs.org; the installer runs the normal npm install and production build directly on your Ubuntu server.
+Inside the ZIP you'll also find:
+README.md
+QUICK_START.txt
+TEST_RESULTS.txt
+
+So you have the full documentation with the package.
+Once you upload it and run ./scripts/install.sh, don't start changing things if there is an error. Send me the exact screen/output from that first run, and we'll fix the installation from that point rather than rebuilding it again.
